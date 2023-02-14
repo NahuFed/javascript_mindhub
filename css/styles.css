@@ -27,10 +27,21 @@ footer a{
 .nav_arrow i:hover{
   color: #d90368;    
 }
+.card img{
+  min-height: 15vh;
+  max-height: 15vh;  
+  object-fit: cover;
+}
 
 
 @media screen and (max-width:767px) {
-    footer aside{
-        margin-bottom: 0.7em;
-    }    
+
+    .card img{
+      min-height: 25vh;
+      max-height: 25vh;  
+      object-fit: cover;
+    }
+    aside{
+      margin-bottom: 3vh;
+    }
 }
