@@ -48,6 +48,11 @@ td:hover{
   white-space: pre-wrap;  
 } 
 
+.card{
+height: 100%;
+}
+
+
 @media screen and (max-width:767px) {
 
     .card img{
