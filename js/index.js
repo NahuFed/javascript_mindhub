@@ -43,7 +43,10 @@ let formulario = document.querySelector('form')
 
 formulario.addEventListener('submit',(event)=>{
   event.preventDefault()
-  let eventosFiltrados = data.events.filter(evento => evento.name.toLowerCase().includes(buscador.value.toLowerCase()))  
+  let eventosFiltradosNombre = data.events.filter(evento => evento.name.toLowerCase().includes(buscador.value.toLowerCase()))  
+  let eventosFiltradosDescripcion = data.events.filter(evento => evento.description.toLowerCase().includes(buscador.value.toLowerCase()))
+  let eventosFiltrados = eventosFiltradosNombre.concat(eventosFiltradosDescripcion)
+  
   let cardsFiltradas = crearCards(eventosFiltrados)
   contenedorCards.innerHTML= cardsFiltradas
   console.log(cardsFiltradas)
