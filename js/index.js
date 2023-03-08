@@ -1,18 +1,59 @@
-const contenedorCards = document.getElementById("contenedor-cards")
+const contenedorCards = document.getElementById("contenedor-cards");
+const contenedorCheckboxes = document.getElementById("contenedor-checkboxes");
 
-let cardsGeneradas = crearCards(data.events)
+let cardsGeneradas = crearCards(data.events);
+let checkBoxesGeneradas = crearCheckboxes(data.events);
 
-contenedorCards.innerHTML = cardsGeneradas
+contenedorCards.innerHTML = cardsGeneradas;
+contenedorCheckboxes.innerHTML = checkBoxesGeneradas;
 
+let listArray = [];
+let buscador = document.getElementById("buscador");
+let formulario = document.querySelector("form");
 
+let eventosFiltrados = data.events;
 
+formulario.addEventListener("submit", (event) => {
+  event.preventDefault();
+  eventosFiltrados = data.events.filter(
+    (evento) =>
+      evento.name.toLowerCase().includes(buscador.value.toLowerCase()) ||
+      evento.description.toLowerCase().includes(buscador.value.toLowerCase())
+  );
+  actualizarCards(eventosFiltrados);
+});
 
+let botonesCheckbox = document.querySelectorAll(".form-check-input");
 
-function crearCards(arrayDatos){
-    let cards = ''
-    
-    for (const evento of arrayDatos){
-        cards += `<aside class="col-12 col-md-6 col-lg-3 pb-5">
+for (let checkbox of botonesCheckbox) {
+  checkbox.addEventListener("click", function () {
+    if (this.checked) {
+      listArray.push(this.value);
+    } else {
+      listArray = listArray.filter((categoria) => categoria !== this.value);
+    }
+    eventosFiltrados = data.events.filter((evento) =>
+      listArray.includes(evento.category)
+    );
+    eventosFiltrados = eventosFiltrados.filter(
+      (evento) =>
+        evento.name.toLowerCase().includes(buscador.value.toLowerCase()) ||
+        evento.description.toLowerCase().includes(buscador.value.toLowerCase())
+    );
+    actualizarCards(eventosFiltrados);
+  });
+}
+
+function actualizarCards(eventos) {
+  let cards = crearCards(eventos);
+  contenedorCards.innerHTML = cards;
+}
+
+function crearCards(arrayDatos) {
+  let cards = "";
+
+  for (const evento of arrayDatos) {
+    cards += `<aside class="col-12 col-md-6 col-lg-3 pb-5">
         <div class="card">
           <img src= ${evento.image} />
           <div class="card-body d-flex flex-column">
@@ -28,26 +69,25 @@ function crearCards(arrayDatos){
             </div>
           </div>
         </div>
-      </aside>`
-        
-        
-    }
-    return cards
+      </aside>`;
+  }
+  return cards;
 }
+function crearCheckboxes(arrayDatos) {
+  let checkboxes = "";
 
-
-
-
-let buscador = document.getElementById('buscador')
-let formulario = document.querySelector('form')
-
-formulario.addEventListener('submit',(event)=>{
-  event.preventDefault()
-  let eventosFiltradosNombre = data.events.filter(evento => evento.name.toLowerCase().includes(buscador.value.toLowerCase()))  
-  let eventosFiltradosDescripcion = data.events.filter(evento => evento.description.toLowerCase().includes(buscador.value.toLowerCase()))
-  let eventosFiltrados = eventosFiltradosNombre.concat(eventosFiltradosDescripcion)
-  
-  let cardsFiltradas = crearCards(eventosFiltrados)
-  contenedorCards.innerHTML= cardsFiltradas
-  console.log(cardsFiltradas)
-})
+  for (const evento of data.events) {
+    if (!checkboxes.includes(evento.category)) {
+      checkboxes += `<div class="form-check col-12 col-md-6 col-lg-3">
+      <input
+        class="form-check-input"
+        type="checkbox"
+        value="${evento.category}"
+        id="${evento.category}"             
+      />
+      <label class="form-check-label" for="${evento.category}"> ${evento.category} </label>
+    </div>`;
+    }
+  }
+  return checkboxes;
+}
