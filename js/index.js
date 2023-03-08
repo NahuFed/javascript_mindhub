@@ -38,11 +38,13 @@ function crearCards(arrayDatos){
 
 
 
-
 let buscador = document.getElementById('buscador')
+let formulario = document.querySelector('form')
 
-buscador.addEventListener('change',()=>{
+formulario.addEventListener('submit',(event)=>{
+  event.preventDefault()
   let eventosFiltrados = data.events.filter(evento => evento.name.toLowerCase().includes(buscador.value.toLowerCase()))  
   let cardsFiltradas = crearCards(eventosFiltrados)
   contenedorCards.innerHTML= cardsFiltradas
+  console.log(cardsFiltradas)
 })
