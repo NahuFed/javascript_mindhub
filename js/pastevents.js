@@ -68,7 +68,7 @@ function crearCards(arrayDatos){
               class="card-footer d-flex justify-content-between border-0 bg-white"
             >
               <p>$ ${evento.price}</p>
-              <a href="./details.html${evento._id} class="btn btn-outline-success"
+              <a href="./details.html?_id=${evento._id}" class="btn btn-outline-success"
                 >Ver mas</a
               >
             </div>
