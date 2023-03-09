@@ -47,6 +47,9 @@ for (let checkbox of botonesCheckbox) {
 
 function actualizarCards(eventos) {
   let cards = crearCards(eventos);
+  if (eventos.length === 0) {
+    cards = `<p>No se encontraron resultados. Prueba modificando los filtros.</p>`;
+  }
   contenedorCards.innerHTML = cards;
 }
 
