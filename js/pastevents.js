@@ -24,26 +24,53 @@ formulario.addEventListener("submit", (event) => {
   actualizarCards(eventosFiltrados);
 });
 
-let botonesCheckbox = document.querySelectorAll(".form-check-input");
+// let botonesCheckbox = document.querySelectorAll(".form-check-input");
 
-for (let checkbox of botonesCheckbox) {
-  checkbox.addEventListener("click", function () {
-    if (this.checked) {
-      listArray.push(this.value);
-    } else {
-      listArray = listArray.filter((categoria) => categoria !== this.value);
-    }
-    eventosFiltrados = data.events.filter((evento) =>
-      listArray.includes(evento.category)
-    );
-    eventosFiltrados = eventosFiltrados.filter(
-      (evento) =>
-        evento.name.toLowerCase().includes(buscador.value.toLowerCase()) ||
-        evento.description.toLowerCase().includes(buscador.value.toLowerCase())
-    );
-    actualizarCards(eventosFiltrados);
+// for (let checkbox of botonesCheckbox) {
+//   checkbox.addEventListener("click", function () {
+//     if (this.checked) {
+//       listArray.push(this.value);
+//     } else {
+//       listArray = listArray.filter((categoria) => categoria !== this.value);
+//     }
+//     eventosFiltrados = data.events.filter((evento) =>
+//       listArray.includes(evento.category)
+//     );
+//     eventosFiltrados = eventosFiltrados.filter(
+//       (evento) =>
+//         evento.name.toLowerCase().includes(buscador.value.toLowerCase()) ||
+//         evento.description.toLowerCase().includes(buscador.value.toLowerCase())
+//     );
+//     actualizarCards(eventosFiltrados);
+//   });
+// }
+// Agregar el siguiente bloque de código para manejar el evento "submit" del formulario:
+formulario.addEventListener("submit", (event) => {
+  event.preventDefault();
+
+  // Obtener los valores de los checkboxes marcados
+  let checkboxesMarcados = document.querySelectorAll(
+    'input[type="checkbox"]:checked'
+  );
+  let listArray = Array.from(checkboxesMarcados).map((checkbox) => {
+    return checkbox.value;
   });
-}
+
+  // Filtrar los eventos según las categorías seleccionadas
+  eventosFiltrados = data.events.filter((evento) =>
+    listArray.includes(evento.category)
+  );
+
+  // Filtrar los eventos según el texto del buscador
+  eventosFiltrados = eventosFiltrados.filter(
+    (evento) =>
+      evento.name.toLowerCase().includes(buscador.value.toLowerCase()) ||
+      evento.description.toLowerCase().includes(buscador.value.toLowerCase())
+  );
+
+  // Actualizar las cards con los eventos filtrados
+  actualizarCards(eventosFiltrados);
+});
 
 function actualizarCards(eventos) {
   let cards = crearCards(eventos);
