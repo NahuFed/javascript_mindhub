@@ -13,7 +13,7 @@ function traerDatos() {
       
       let cardsGeneradas = crearCards(datosApi.events);
       let checkBoxesGeneradas = crearCheckboxes(datosApi.events);
-      let eventosFiltrados = datosApi.events;
+      
 
       contenedorCards.innerHTML = cardsGeneradas;
       contenedorCheckboxes.innerHTML = checkBoxesGeneradas;
