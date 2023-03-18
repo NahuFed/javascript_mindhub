@@ -14,7 +14,7 @@ function traerDatos() {
       const currentDate = new Date(datosApi.currentDate);
       let cardsGeneradas = crearCards(datosApi.events, currentDate);
       let checkBoxesGeneradas = crearCheckboxes(datosApi.events);
-      let eventosFiltrados = datosApi.events;
+      
 
       contenedorCards.innerHTML = cardsGeneradas;
       contenedorCheckboxes.innerHTML = checkBoxesGeneradas;
