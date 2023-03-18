@@ -17,18 +17,6 @@ function traerDatos() {
       contenedorCards.innerHTML = cardsGeneradas;
       contenedorCheckboxes.innerHTML = checkBoxesGeneradas;
 
-      formulario.addEventListener("submit", (event) => {
-        event.preventDefault();
-        eventosFiltrados = datosApi.events.filter(
-          (evento) =>
-            evento.name.toLowerCase().includes(buscador.value.toLowerCase()) ||
-            evento.description
-              .toLowerCase()
-              .includes(buscador.value.toLowerCase())
-        );
-        actualizarCards(eventosFiltrados);
-      });
-
       // manejar el evento "submit" del formulario:
       formulario.addEventListener("submit", (event) => {
         event.preventDefault();
