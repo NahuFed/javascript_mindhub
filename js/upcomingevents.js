@@ -12,13 +12,12 @@ function traerDatos() {
     .then((response) => response.json())
     .then((datosApi) => {
       const currentDate = new Date(datosApi.currentDate);
-      let cardsGeneradas = crearCards(datosApi.events,currentDate);
+      let cardsGeneradas = crearCards(datosApi.events, currentDate);
       let checkBoxesGeneradas = crearCheckboxes(datosApi.events);
       let eventosFiltrados = datosApi.events;
 
       contenedorCards.innerHTML = cardsGeneradas;
       contenedorCheckboxes.innerHTML = checkBoxesGeneradas;
-  
 
       // manejar el evento "submit" del formulario:
       formulario.addEventListener("submit", (event) => {
@@ -54,7 +53,7 @@ function traerDatos() {
         }
 
         // Actualizar las cards con los eventos filtrados
-        actualizarCards(eventosFiltrados,currentDate);
+        actualizarCards(eventosFiltrados, currentDate);
       });
     })
     .catch((error) => console.log(error.message));
@@ -62,15 +61,15 @@ function traerDatos() {
 
 traerDatos();
 
-function actualizarCards(eventos,fechaActual) {
-  let cards = crearCards(eventos,fechaActual);
+function actualizarCards(eventos, fechaActual) {
+  let cards = crearCards(eventos, fechaActual);
   if (eventos.length === 0) {
     cards = `<p>No se encontraron resultados. Prueba modificando los filtros.</p>`;
   }
   contenedorCards.innerHTML = cards;
 }
 
-function crearCards(arrayDatos,currentDate) {
+function crearCards(arrayDatos, currentDate) {
   let cards = "";
   for (const evento of arrayDatos) {
     let eventDate = new Date(evento.date);
