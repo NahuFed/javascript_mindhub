@@ -55,6 +55,24 @@ textarea{
   resize: none;
 }
 
+.card-details{
+  display: flex;
+  justify-content: center;
+  align-content: center;  
+  width: 50vw;
+  height: 70vh;
+  
+}
+ .card-details .card-text{  
+   justify-content: center;
+   align-items: center;
+ }
+.card-details img{
+  min-height: 30vh;
+  max-height: 50vh;  
+  object-fit: cover;
+}
+
 @media screen and (max-width:767px) {
 
     .card img{

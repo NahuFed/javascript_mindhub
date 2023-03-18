@@ -9,7 +9,7 @@ function traerDatos() {
   fetch("https://mindhub-xj03.onrender.com/api/amazing")
     .then((response) => response.json())
     .then((datosApi) => {
-      console.log(datosApi);
+      
       let cardsGeneradas = crearCards(datosApi.events);
       let checkBoxesGeneradas = crearCheckboxes(datosApi.events);
       let eventosFiltrados = datosApi.events;
