@@ -6,7 +6,8 @@ let buscador = document.getElementById("buscador");
 let formulario = document.querySelector("form");
 
 function traerDatos() {
-  fetch("https://mindhub-xj03.onrender.com/api/amazing")
+    fetch('./data.json')
+    //fetch("https://mindhub-xj03.onrender.com/api/amazing")
     .then((response) => response.json())
     .then((datosApi) => {
       
