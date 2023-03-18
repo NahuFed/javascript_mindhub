@@ -1,69 +1,80 @@
-const contenedorCards = document.getElementById("contenedor-cards")
-const currentDate = new Date(data.currentDate)
+const contenedorCards = document.getElementById("contenedor-cards");
+
 const contenedorCheckboxes = document.getElementById("contenedor-checkboxes");
-
-let cardsGeneradas = crearCards(data.events);
-let checkBoxesGeneradas = crearCheckboxes(data.events);
-
-contenedorCards.innerHTML = cardsGeneradas;
-contenedorCheckboxes.innerHTML = checkBoxesGeneradas;
 
 let listArray = [];
 let buscador = document.getElementById("buscador");
 let formulario = document.querySelector("form");
 
-let eventosFiltrados = data.events;
+function traerDatos() {
+  // fetch('../data.json')
+  fetch("https://mindhub-xj03.onrender.com/api/amazing")
+    .then((response) => response.json())
+    .then((datosApi) => {
+      const currentDate = new Date(datosApi.currentDate);
+      let cardsGeneradas = crearCards(datosApi.events, currentDate);
+      let checkBoxesGeneradas = crearCheckboxes(datosApi.events);
+      let eventosFiltrados = datosApi.events;
 
-formulario.addEventListener("submit", (event) => {
-  event.preventDefault();
-  eventosFiltrados = data.events.filter(
-    (evento) =>
-      evento.name.toLowerCase().includes(buscador.value.toLowerCase()) ||
-      evento.description.toLowerCase().includes(buscador.value.toLowerCase())
-  );
-  actualizarCards(eventosFiltrados);
-});
+      contenedorCards.innerHTML = cardsGeneradas;
+      contenedorCheckboxes.innerHTML = checkBoxesGeneradas;
 
-let botonesCheckbox = document.querySelectorAll(".form-check-input");
+      // manejar el evento "submit" del formulario:
+      formulario.addEventListener("submit", (event) => {
+        event.preventDefault();
 
-for (let checkbox of botonesCheckbox) {
-  checkbox.addEventListener("click", function () {
-    if (this.checked) {
-      listArray.push(this.value);
-    } else {
-      listArray = listArray.filter((categoria) => categoria !== this.value);
-    }
-    eventosFiltrados = data.events.filter((evento) =>
-      listArray.includes(evento.category)
-    );
-    eventosFiltrados = eventosFiltrados.filter(
-      (evento) =>
-        evento.name.toLowerCase().includes(buscador.value.toLowerCase()) ||
-        evento.description.toLowerCase().includes(buscador.value.toLowerCase())
-    );
-    actualizarCards(eventosFiltrados);
-  });
+        // Obtener los valores de los checkboxes marcados
+        let checkboxesMarcados = document.querySelectorAll(
+          'input[type="checkbox"]:checked'
+        );
+        let listArray = Array.from(checkboxesMarcados).map((checkbox) => {
+          return checkbox.value;
+        });
+
+        // Filtrar los eventos según las categorías seleccionadas
+        let eventosFiltrados = datosApi.events;
+        if (listArray.length > 0) {
+          eventosFiltrados = eventosFiltrados.filter((evento) =>
+            listArray.includes(evento.category)
+          );
+        }
+
+        // Filtrar los eventos según el texto del buscador
+        if (buscador.value) {
+          eventosFiltrados = eventosFiltrados.filter(
+            (evento) =>
+              evento.name
+                .toLowerCase()
+                .includes(buscador.value.toLowerCase()) ||
+              evento.description
+                .toLowerCase()
+                .includes(buscador.value.toLowerCase())
+          );
+        }
+
+        // Actualizar las cards con los eventos filtrados
+        actualizarCards(eventosFiltrados, currentDate);
+      });
+    })
+    .catch((error) => console.log(error.message));
 }
 
-function actualizarCards(eventos) {
-  let cards = crearCards(eventos);
+traerDatos();
+
+function actualizarCards(eventos, fechaActual) {
+  let cards = crearCards(eventos, fechaActual);
   if (eventos.length === 0) {
     cards = `<p>No se encontraron resultados. Prueba modificando los filtros.</p>`;
   }
   contenedorCards.innerHTML = cards;
-  
 }
 
-
-
-
-
-function crearCards(arrayDatos){
-    let cards = ''    
-    for (const evento of arrayDatos){
-        let  eventDate = new Date(evento.date)
-        if(eventDate > currentDate){
-        cards += `<aside class="col-12 col-md-6 col-lg-3 pb-5">
+function crearCards(arrayDatos, currentDate) {
+  let cards = "";
+  for (const evento of arrayDatos) {
+    let eventDate = new Date(evento.date);
+    if (eventDate > currentDate) {
+      cards += `<aside class="col-12 col-md-6 col-lg-3 pb-5">
         <div class="card">
           <img src= ${evento.image} />
           <div class="card-body d-flex flex-column">
@@ -73,22 +84,21 @@ function crearCards(arrayDatos){
               class="card-footer d-flex justify-content-between border-0 bg-white"
             >
               <p>$ ${evento.price}</p>
-              <a href="./details.html" class="btn btn-outline-success"
+              <a href="./details.html?_id=${evento._id}" class="btn btn-outline-success"
                 >Ver mas</a
               >
             </div>
           </div>
         </div>
-      </aside>`
-        }
-        
+      </aside>`;
     }
-    return cards
+  }
+  return cards;
 }
 function crearCheckboxes(arrayDatos) {
   let checkboxes = "";
 
-  for (const evento of data.events) {
+  for (const evento of arrayDatos) {
     if (!checkboxes.includes(evento.category)) {
       checkboxes += `<div class="form-check col-12 col-md-6 col-lg-3">
       <input
