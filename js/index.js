@@ -1,72 +1,75 @@
 const contenedorCards = document.getElementById("contenedor-cards");
 const contenedorCheckboxes = document.getElementById("contenedor-checkboxes");
 
-
-
 let listArray = [];
 let buscador = document.getElementById("buscador");
 let formulario = document.querySelector("form");
 
+function traerDatos() {
+  fetch("https://mindhub-xj03.onrender.com/api/amazing")
+    .then((response) => response.json())
+    .then((datosApi) => {
+      console.log(datosApi);
+      let cardsGeneradas = crearCards(datosApi.events);
+      let checkBoxesGeneradas = crearCheckboxes(datosApi.events);
+      let eventosFiltrados = datosApi.events;
 
+      contenedorCards.innerHTML = cardsGeneradas;
+      contenedorCheckboxes.innerHTML = checkBoxesGeneradas;
 
-function traerDatos(){
-  fetch('https://mindhub-xj03.onrender.com/api/amazing')
-  .then(response => response.json())
-  .then(datosApi =>{
-    console.log(datosApi)    
-    let cardsGeneradas = crearCards(datosApi.events);
-    let checkBoxesGeneradas = crearCheckboxes(datosApi.events);
-    let eventosFiltrados = datosApi.events;
-
-    contenedorCards.innerHTML = cardsGeneradas;
-    contenedorCheckboxes.innerHTML = checkBoxesGeneradas;
-
-    formulario.addEventListener("submit", (event) => {
-      event.preventDefault();
-      eventosFiltrados = datosApi.events.filter(
-        (evento) =>
-          evento.name.toLowerCase().includes(buscador.value.toLowerCase()) ||
-          evento.description.toLowerCase().includes(buscador.value.toLowerCase())
-      );
-      actualizarCards(eventosFiltrados);
-    });
-    
-    // Agregar el siguiente bloque de código para manejar el evento "submit" del formulario:
-    formulario.addEventListener("submit", (event) => {
-      event.preventDefault();
-    
-      // Obtener los valores de los checkboxes marcados
-      let checkboxesMarcados = document.querySelectorAll(
-        'input[type="checkbox"]:checked'
-      );
-      let listArray = Array.from(checkboxesMarcados).map((checkbox) => {
-        return checkbox.value;
+      formulario.addEventListener("submit", (event) => {
+        event.preventDefault();
+        eventosFiltrados = datosApi.events.filter(
+          (evento) =>
+            evento.name.toLowerCase().includes(buscador.value.toLowerCase()) ||
+            evento.description
+              .toLowerCase()
+              .includes(buscador.value.toLowerCase())
+        );
+        actualizarCards(eventosFiltrados);
       });
-    
-      // Filtrar los eventos según las categorías seleccionadas
-      eventosFiltrados = datosApi.events.filter((evento) =>
-        listArray.includes(evento.category)
-      );
-    
-      // Filtrar los eventos según el texto del buscador
-      eventosFiltrados = eventosFiltrados.filter(
-        (evento) =>
-          evento.name.toLowerCase().includes(buscador.value.toLowerCase()) ||
-          evento.description.toLowerCase().includes(buscador.value.toLowerCase())
-      );
-    
-      // Actualizar las cards con los eventos filtrados
-      actualizarCards(eventosFiltrados);
-    });
 
-  })
-  .catch(error => console.log(error.message))
+      // manejar el evento "submit" del formulario:
+      formulario.addEventListener("submit", (event) => {
+        event.preventDefault();
+
+        // Obtener los valores de los checkboxes marcados
+        let checkboxesMarcados = document.querySelectorAll(
+          'input[type="checkbox"]:checked'
+        );
+        let listArray = Array.from(checkboxesMarcados).map((checkbox) => {
+          return checkbox.value;
+        });
+
+        // Filtrar los eventos según las categorías seleccionadas
+        let eventosFiltrados = datosApi.events;
+        if (listArray.length > 0) {
+          eventosFiltrados = eventosFiltrados.filter((evento) =>
+            listArray.includes(evento.category)
+          );
+        }
+
+        // Filtrar los eventos según el texto del buscador
+        if (buscador.value) {
+          eventosFiltrados = eventosFiltrados.filter(
+            (evento) =>
+              evento.name
+                .toLowerCase()
+                .includes(buscador.value.toLowerCase()) ||
+              evento.description
+                .toLowerCase()
+                .includes(buscador.value.toLowerCase())
+          );
+        }
+
+        // Actualizar las cards con los eventos filtrados
+        actualizarCards(eventosFiltrados);
+      });
+    })
+    .catch((error) => console.log(error.message));
 }
 
-traerDatos()
-
-
-
+traerDatos();
 
 function actualizarCards(eventos) {
   let cards = crearCards(eventos);
